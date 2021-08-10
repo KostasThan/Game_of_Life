@@ -6,14 +6,61 @@
 
     <link rel="stylesheet" href="style.css" />
 
-    <title>Page Title</title>
+    <title>Game of Life</title>
   </head>
-  <body>
+  <body id='body'>
+    <div class="modal" id='modal'>
+      <button class="close-modal" id='closeModalButton'>&times;</button>
+      <h1 class="center">Welcome to the Game of Life 😍</h1>
+      <h4 class="subtitle">A game of John Horton Conway</h4>
+      <h3 class='rulesHeader'>Rules &#128207;</h3>
+      <p class='rulesParagraph'>
+      The universe of the Game of Life is an infinite, two-dimensional
+      orthogonal grid of square cells, each of which is in one of two possible
+      states, live or dead, (or populated and unpopulated, respectively). Every
+      cell interacts with its eight neighbours, which are the cells that are
+      horizontally, vertically, or diagonally adjacent. At each step in time,
+      the following transitions occur:
+      <ol class='rulesParagraph'>
+        <li>
+          Any live cell with more than three live neighbours dies, as if by
+          overpopulation.❌
+        </li>
+        <li>
+          Any live cell with fewer than two live neighbours dies, as if by
+          underpopulation.❌
+        </li>
+        <li>
+          Any live cell with two or three live neighbours lives on to the next
+          generation.&#9989;
+        </li>
+
+        <li>
+          Any dead cell with exactly three live neighbours becomes a live cell,
+          as if by reproduction.&#9989;
+        </li>
+      </ol>
+      <p class='rulesParagraph'>These rules, which compare the behavior of the automaton to real life, can be condensed into the following:</p>
+      <ol class='rulesParagraph'>
+        <li>
+          Any live cell with two or three live neighbours survives. &#9989;
+        </li>
+        <li>
+          Any dead cell with three live neighbours becomes a live cell. &#9989;
+        </li>
+        </li>
+        <li>
+          All other live cells die in the next generation. Similarly, all other dead cells stay dead. ❌
+        </li>
+      </ol>
+    </p>
+    </div>
     <span>
-      <button class="start" id="startButton">Start</button>
-      <button class="stop" id="stopButton">Stop</button>
-      <button class="clear" id="clearButton">clear</button>
-    </spam>
+      <button class="button startButton" id="startButton">&#9654; Start</button>
+      <button class="button" id="resetButton">Reset</button>
+      <button class="button clearButton" id="clearButton">Clear</button>
+      <p id="GenPar">Generation: 0</p>
+    </span>
     <div class="grid-container" id="container"></div>
   </body>
   <script src="script.js"></script>
