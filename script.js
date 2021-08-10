@@ -139,3 +139,5 @@ grid.addEventListener('mouseenter', () => (state = 0));
 startButton.addEventListener('click', startSimulation);
 stopButton.addEventListener('click', () => clearInterval(interval));
 clearButton.addEventListener('click', clearGrid);
+
+//mixas
