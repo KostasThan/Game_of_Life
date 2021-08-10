@@ -141,9 +141,13 @@ function copyStateFromOriginalState() {
 }
 
 function resetGrid() {
-  stopSimulation();
-  copyStateFromOriginalState();
-  startSimulation();
+  if (simulationInterval) {
+    stopSimulation();
+    copyStateFromOriginalState();
+    startSimulation();
+  } else {
+    copyStateFromOriginalState();
+  }
 }
 
 function startSimulation() {
