@@ -17,6 +17,25 @@ function createSquares(columns, rows) {
   }
 }
 
+function startStop() {
+  if (simulationInterval) {
+    startButton.textContent = '\u25BA Start';
+    stopSimulation();
+    simulationInterval = undefined;
+  } else {
+    startButton.textContent = `\u23f8 Stop`;
+    startSimulation();
+  }
+}
+
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
 function changeStateAndColor(event) {
   if (event.target.style.backgroundColor === 'white') {
     changeState();
@@ -42,16 +61,6 @@ function changeElementColor(element) {
 
 function setGridColumns(columns) {
   gridStyle.gridTemplateColumns = `repeat(auto-fill, 20px)`;
-}
-
-function startSimulation() {
-  calculateInitialGridState();
-  gridState = calculateNextGen();
-  paintNextGen();
-  interval = setInterval(() => {
-    gridState = calculateNextGen();
-    paintNextGen();
-  }, 1000);
 }
 
 function calculateInitialGridState() {
@@ -102,6 +111,7 @@ function calculateNewState(currentState, neighborCount) {
 }
 
 function paintNextGen() {
+  genPar.textContent = `Generation: ${++genCount}`;
   for (let i = 0; i < columns; i++) {
     for (let j = 0; j < rows; j++) {
       gridElements[i][j].style.backgroundColor =
@@ -115,27 +125,119 @@ function clearGrid() {
     arr.forEach(el => (el.style.backgroundColor = 'white'))
   );
   gridState.forEach(el => 0);
-  console.log('clearing');
 }
 
+function copyStateFromOriginalState() {
+  if (initialState) {
+    for (let i = 0; i < columns; i++) {
+      for (let j = 0; j < rows; j++) {
+        if (initialState[i][j] === 1)
+          gridElements[i][j].style.backgroundColor = 'black';
+        else gridElements[i][j].style.backgroundColor = 'white';
+        gridState[i][j] = initialState[i][j];
+      }
+    }
+  }
+}
+
+function resetGrid() {
+  stopSimulation();
+  copyStateFromOriginalState();
+  startSimulation();
+}
+
+function startSimulation() {
+  clearButton.style.display = 'none';
+  // resetButton.style.display = 'none';
+  genPar.style.display = '';
+  stopExecution = false;
+  calculateInitialGridState();
+  gridState = calculateNextGen();
+  initialState = JSON.parse(JSON.stringify(gridState));
+  paintNextGen();
+
+  function nextStep() {
+    calculateInitialGridState();
+    gridState = calculateNextGen();
+    paintNextGen();
+  }
+  // let nextInterval = Date.now() + refreshDelay;
+  // setTimeout(
+  //   () => timer(nextStep, nextInterval, () => stopExecution),
+  //   refreshDelay
+  // );
+  simulationInterval = setInterval(nextStep, refreshDelay);
+}
+
+function stopSimulation() {
+  clearInterval(simulationInterval);
+  stopExecution = true;
+  clearButton.style.display = '';
+  genCount = 0;
+  genPar.style.display = 'none';
+  resetButton.style.display = '';
+}
+
+/**
+ * not used atm
+ */
+function timer(func, startTime, stopRecursion) {
+  let dt = Date.now() - startTime; // the drift (positive for overshooting)
+  startTime += refreshDelay;
+  if (!stopRecursion()) {
+    func();
+    setTimeout(
+      () => timer(func, startTime, stopRecursion),
+      Math.max(0, refreshDelay - dt)
+    );
+  }
+}
+
+const openModal = function () {
+  modal.classList.remove('hidden');
+  //overlay.classList.remove('hidden');
+};
+
+const closeModal = function () {
+  if (!modal.classList.contains('hidden')) modal.classList.add('hidden');
+  //overlay.classList.add('hidden');
+};
+
+let simulationInterval;
+let stopExecution = false;
+let refreshDelay = 1000;
 let state = 0;
 const rows = 100;
 const columns = 100;
 let gridState = Array(columns)
   .fill(0)
   .map(x => Array(rows).fill(0));
+
+let initialState;
 let gridElements = [];
+let genCount = 0;
 const grid = document.getElementById('container');
 const startButton = document.getElementById('startButton');
-const stopButton = document.getElementById('stopButton');
 const clearButton = document.getElementById('clearButton');
+const resetButton = document.getElementById('resetButton');
+const progressBar = document.getElementById('myProgress');
+const genPar = document.getElementById('GenPar');
 const gridStyle = grid.style;
-let interval;
+const modal = document.getElementById('modal');
+const closeModalButton = document.getElementById('closeModalButton');
 
 setGridColumns(columns);
 createSquares(columns, rows);
 document.body.addEventListener('mouseenter', () => (state = 0));
 grid.addEventListener('mouseenter', () => (state = 0));
-startButton.addEventListener('click', startSimulation);
-stopButton.addEventListener('click', () => clearInterval(interval));
+startButton.addEventListener('click', startStop);
 clearButton.addEventListener('click', clearGrid);
+resetButton.addEventListener('click', resetGrid);
+genPar.style.display = 'none';
+closeModalButton.addEventListener('click', closeModal);
+document.body.addEventListener('click', closeModal);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
+  }
+});
