@@ -142,9 +142,11 @@ function copyStateFromOriginalState() {
 
 function resetGrid() {
   if (simulationInterval) {
-    stopSimulation();
+    clearInterval(simulationInterval);
     copyStateFromOriginalState();
-    startSimulation();
+    genPar.textContent = 'Generation: 1';
+    genCount = 1;
+    simulationInterval = setInterval(nextStep, refreshDelay);
   } else {
     copyStateFromOriginalState();
   }
@@ -152,30 +154,23 @@ function resetGrid() {
 
 function startSimulation() {
   clearButton.style.display = 'none';
-  // resetButton.style.display = 'none';
   genPar.style.display = '';
-  stopExecution = false;
+  calculateInitialGridState();
+  initialState = JSON.parse(JSON.stringify(gridState));
+  gridState = calculateNextGen();
+  genCount++;
+  paintNextGen();
+  simulationInterval = setInterval(nextStep, refreshDelay);
+}
+
+function nextStep() {
   calculateInitialGridState();
   gridState = calculateNextGen();
-  initialState = JSON.parse(JSON.stringify(gridState));
   paintNextGen();
-
-  function nextStep() {
-    calculateInitialGridState();
-    gridState = calculateNextGen();
-    paintNextGen();
-  }
-  // let nextInterval = Date.now() + refreshDelay;
-  // setTimeout(
-  //   () => timer(nextStep, nextInterval, () => stopExecution),
-  //   refreshDelay
-  // );
-  simulationInterval = setInterval(nextStep, refreshDelay);
 }
 
 function stopSimulation() {
   clearInterval(simulationInterval);
-  stopExecution = true;
   clearButton.style.display = '';
   genCount = 0;
   genPar.style.display = 'none';
@@ -197,18 +192,22 @@ function timer(func, startTime, stopRecursion) {
   }
 }
 
-const openModal = function () {
-  modal.classList.remove('hidden');
-  //overlay.classList.remove('hidden');
+const openModal = function (e) {
+  // modal.style.display = 'block';
+  if (modal.classList.contains('hidden')) {
+    modal.classList.remove('hidden');
+  }
 };
 
 const closeModal = function () {
-  if (!modal.classList.contains('hidden')) modal.classList.add('hidden');
-  //overlay.classList.add('hidden');
+  // if (!modal.classList.contains('hidden')) {
+  //   modal.classList.add('hidden');
+  // }
+  // //overlay.classList.add('hidden');
+  //modal.css('display', 'none');
 };
 
 let simulationInterval;
-let stopExecution = false;
 let refreshDelay = 1000;
 let state = 0;
 const rows = 100;
@@ -225,7 +224,8 @@ const startButton = document.getElementById('startButton');
 const clearButton = document.getElementById('clearButton');
 const resetButton = document.getElementById('resetButton');
 const progressBar = document.getElementById('myProgress');
-const genPar = document.getElementById('GenPar');
+const genPar = document.getElementById('genPar');
+const rulesButton = document.getElementById('rulesButton');
 const gridStyle = grid.style;
 const modal = document.getElementById('modal');
 const closeModalButton = document.getElementById('closeModalButton');
@@ -245,3 +245,4 @@ document.addEventListener('keydown', e => {
     closeModal();
   }
 });
+rulesButton.addEventListener('click', openModal);
