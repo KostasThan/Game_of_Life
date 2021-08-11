@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="style.css" />
+    <script   src="https://code.jquery.com/jquery-3.6.0.min.js"   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="   crossorigin="anonymous"></script>
 
     <title>Game of Life</title>
   </head>
   <body id='body'>
+    <div id="modalBackround">
     <div class="modal" id='modal'>
       <button class="close-modal" id='closeModalButton'>&times;</button>
       <h1 class="center">Welcome to the Game of Life 😍</h1>
-      <h4 class="subtitle">A game of John Horton Conway</h4>
+      <h4 class="subtitle">A game by John Horton Conway</h4>
       <h3 class='rulesHeader'>Rules &#128207;</h3>
       <p class='rulesParagraph'>
       The universe of the Game of Life is an infinite, two-dimensional
@@ -55,13 +57,18 @@
       </ol>
     </p>
     </div>
+  </div>
     <span>
       <button class="button startButton" id="startButton">&#9654; Start</button>
       <button class="button" id="resetButton">Reset</button>
       <button class="button clearButton" id="clearButton">Clear</button>
-      <p id="GenPar">Generation: 0</p>
+      <button class="button" id="rulesButton">Rules</button>
+      <p id="genPar">Generation: 0</p>
     </span>
     <div class="grid-container" id="container"></div>
+    <div class="overlay hidden"></div>
   </body>
   <script src="script.js"></script>
+  <script src="script2.js"></script>
+  
 </html>
