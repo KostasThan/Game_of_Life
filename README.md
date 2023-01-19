@@ -3,6 +3,6 @@
 
 This project realizes the Game of Life created by the mathematician John Horton Conway. 
 
-It is deployed in a github page and is available for the public. 
+It is deployed in a github page and is publicly available. 
 
- *I do not own the creation of the game, just the realization of it.*
+ *I do not own the creation of the game*
